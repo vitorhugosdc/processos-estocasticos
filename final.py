@@ -5,7 +5,7 @@ import os
 import numpy as np
 from statsmodels.tsa.seasonal import seasonal_decompose
 
-# Certifique-se de que uma pasta chamada 'heatmap' existe ou crie-a
+# Cria as pastas para armazenar as imagens
 folders = ['heatmap', 'matrix', 'trends_and_seasonal_decomposition']
 for folder in folders:
     if not os.path.exists(folder):
@@ -41,7 +41,7 @@ def predict_next_state(current_state, transition_matrix, states):
     probabilities = transition_matrix.loc[current_state].values
     return np.random.choice(states, p=probabilities)
 
-def plot_heatmap(matrix_data, city_name, matrix_type='transition'):
+def plot_matrix(matrix_data, city_name, matrix_type='transition'):
     plt.figure(figsize=(20, 15))
     if matrix_type == 'frequency':
         fmt_str = ".0f"
@@ -101,9 +101,9 @@ results_list = []
 
 for city in cities:
     city_data_by_hour = data.groupby('hour')[city].value_counts().unstack().fillna(0)
-    plot_heatmap(city_data_by_hour, city, matrix_type='frequency')
+    plot_matrix(city_data_by_hour, city, matrix_type='frequency')
     transition_matrix = create_transition_matrix(data[city])
-    plot_heatmap(transition_matrix, city)
+    plot_matrix(transition_matrix, city)
     plot_monthly_trends(data, city)
     plot_seasonal_decomposition(data, city)
     
